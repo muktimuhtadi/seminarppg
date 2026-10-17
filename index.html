@@ -208,6 +208,11 @@
                         </div>
                     </div>
 
+                    <!-- 4b. Hasil Refleksi -->
+                    <button onclick="switchTab('hasil-refleksi')" id="nav-hasil-refleksi" class="nav-link px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all">
+                        Hasil Refleksi
+                    </button>
+
                     <!-- 5. Karya Inovasi -->
                     <button onclick="switchTab('karya-inovasi')" id="nav-karya-inovasi" class="nav-link px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all">
                         Karya Inovasi
@@ -244,6 +249,10 @@
             <div class="border-t border-slate-100 pt-2">
                 <span class="text-xs font-bold uppercase text-slate-400 px-3">Semester 2</span>
                 <button onclick="switchTab('semester-2'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue">Semua Mata Kuliah Sem 2</button>
+            </div>
+
+            <div class="border-t border-slate-100 pt-2">
+                <button onclick="switchTab('hasil-refleksi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-slate-800 hover:bg-brand-lightBlue hover:text-brand-blue">Hasil Refleksi</button>
             </div>
 
             <div class="border-t border-slate-100 pt-2">
@@ -990,6 +999,64 @@
                                 <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
                                 <p><strong>Konsep Utama:</strong> Kepemimpinan transformasional berlandaskan pengabdian masyarakat.</p>
                                 <p><strong>Rencana Masa Depan:</strong> Menginisiasi komunitas belajar guru untuk berbagi praktik baik pembelajaran.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION 4B: HASIL REFLEKSI
+             ========================================== -->
+        <section id="tab-hasil-refleksi" class="tab-content hidden py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-lightBlue px-3 py-1 rounded-full">Refleksi Akhir</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Hasil Refleksi</h2>
+                    <p class="text-slate-600 text-sm">Refleksi keseluruhan dari perjalanan belajar selama Semester 1 dan Semester 2.</p>
+                </div>
+
+                <!-- REFLEKSI KESELURUHAN -->
+                <div id="hasil-refleksi-keseluruhan" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Refleksi Keseluruhan &middot; LK 3</span>
+                            <h3 class="text-xl font-bold text-slate-900">Refleksi Pengalaman Belajar Selama Mengikuti PPG</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1_-BXd6bRbIxoDuzBfRY_-cYne3pybduC/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Hasil Refleksi PDF" src="https://drive.google.com/file/d/1_-BXd6bRbIxoDuzBfRY_-cYne3pybduC/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-landmark"></i> Pendidikan Indonesia yang Ideal</h4>
+                                <p><strong>Berpusat pada murid:</strong> Mengacu pada Ki Hadjar Dewantara, pendidikan adalah proses &ldquo;menuntun segala kekuatan kodrat yang ada pada anak-anak&rdquo; agar mencapai keselamatan dan kebahagiaan setinggi-tingginya. Pembelajaran Berdiferensiasi dan Desain Universal untuk Pembelajaran menjadi landasan setiap aktivitas belajar.</p>
+                                <p><strong>Akademis dan karakter seimbang:</strong> Di era kecerdasan buatan, yang membedakan manusia adalah <em>cipta, rasa, dan karsa</em>. Sekolah menjadi ruang aman bagi kesejahteraan emosional dan pembentukan karakter peserta didik.</p>
+                                <p><strong>Guru sebagai fasilitator:</strong> Guru menjadi fasilitator atau mitra belajar yang senantiasa merefleksikan praktik mengajar, berani mengadopsi teknologi, dan tidak berhenti belajar.</p>
+                                <p><strong>Merata dan kolaboratif:</strong> Kualitas pendidikan harus dirasakan secara adil hingga wilayah 3T, dan berlangsung bersama antara keluarga, sekolah, dan masyarakat.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-route mr-1"></i> Langkah Menjadi Guru Profesional</h4>
+                                <p><strong>Jangka pendek (lulus PPG):</strong> Menyiapkan uji pengetahuan PCK, uji kinerja melalui dokumentasi praktik dan modul ajar, serta merapikan artefak ke portofolio digital.</p>
+                                <p><strong>Jangka menengah (pemantapan praktik):</strong> Menerapkan asesmen diagnostik, pembelajaran berdiferensiasi, sosial emosional, dan mendalam, berjejaring di MGMP, serta mengikuti pelatihan teknologi pendidikan.</p>
+                                <p><strong>Jangka panjang (kepemimpinan):</strong> Menjadi guru pamong, melanjutkan ke S2 Magister Pendidikan, menulis modul ajar atau buku panduan guru, menerbitkan artikel di jurnal nasional terakreditasi, dan aktif di forum kebijakan pendidikan.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Rencana Tindak Lanjut: Tiga Hal Penting di Awal Karier</h4>
+                                <p><strong>1. Menghormati budaya lokal:</strong> Memetakan budaya dan bahasa ibu setempat, serta memakai realitas sosial dan kearifan lokal sebagai bahan ajar setiap teks Bahasa Indonesia.</p>
+                                <p><strong>2. Asesmen diagnostik:</strong> Dijadikan landasan dalam mendesain rencana pembelajaran di kelas.</p>
+                                <p><strong>3. Menjalin relasi:</strong> Dengan rekan sejawat, manajemen sekolah, kepala sekolah, MGMP, dinas pendidikan setempat, hingga DPRD.</p>
                             </div>
                         </div>
                     </div>
