@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Portofolio PPG - Mukti Muhtadi</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config for Custom #005B9E Blue Palette & Typography -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#005B9E',
+                            darkBlue: '#004275',
+                            lightBlue: '#E6F0FA',
+                            accent: '#1D80CE',
+                            grayBg: '#F8FAFC',
+                            cardBg: '#FFFFFF',
+                            textDark: '#0F172A',
+                            textMuted: '#475569'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Segoe UI"', 'Roboto', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'cursor': '0 10px 30px -10px rgba(0, 91, 158, 0.12)',
+                        'floating': '0 20px 40px -15px rgba(0, 0, 0, 0.08)',
+                        'glow': '0 0 25px rgba(0, 91, 158, 0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Background Pattern similar to Cursor subtle grid */
+        .bg-grid-pattern {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 91, 158, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 91, 158, 0.04) 1px, transparent 1px);
+        }
+
+        /* Avatar pulse floating effect */
+        @keyframes floatPulse {
+            0%, 100% { transform: translateY(0px) scale(1); box-shadow: 0 10px 25px rgba(0, 91, 158, 0.2); }
+            50% { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 35px rgba(0, 91, 158, 0.35); }
+        }
+        .avatar-float {
+            animation: floatPulse 4s ease-in-out infinite;
+        }
+
+        /* Cursor style dropdown animation */
+        .dropdown-menu {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) scale(0.98);
+        }
+        .dropdown-group:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Glassmorphism navbar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 91, 158, 0.08);
+        }
+
+        /* Active navigation state */
+        .nav-link.active {
+            color: #005B9E;
+            font-weight: 600;
+        }
+        .nav-link.active::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #005B9E;
+            border-radius: 2px;
+            margin-top: 2px;
+        }
+
+        /* Responsive iframe container */
+        .responsive-iframe-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .responsive-iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .pdf-iframe-container {
+            position: relative;
+            width: 100%;
+            height: 620px;
+        }
+    </style>
+</head>
+<body class="bg-brand-grayBg text-brand-textDark font-sans antialiased selection:bg-brand-lightBlue selection:text-brand-blue min-h-screen flex flex-col">
+
+    <!-- NAVIGATION BAR (CURSOR.COM STYLE) -->
+    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo / Identity -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('beranda')">
+                    <div class="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center text-white font-bold text-xl shadow-glow">
+                        eP
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold tracking-tight text-slate-900 block leading-none">e-Portofolio</span>
+                        <span class="text-xs font-medium text-brand-blue tracking-wide uppercase">PPG Calon Guru</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    
+                    <!-- 1. Beranda -->
+                    <button onclick="switchTab('beranda')" id="nav-beranda" class="nav-link active px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all">
+                        Beranda
+                    </button>
+
+                    <!-- 2. Visi Misi -->
+                    <button onclick="switchTab('visi-misi')" id="nav-visi-misi" class="nav-link px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all">
+                        Visi Misi
+                    </button>
+
+                    <!-- 3. Semester 1 (Dropdown) -->
+                    <div class="relative dropdown-group">
+                        <button onclick="switchTab('semester-1')" id="nav-semester-1" class="nav-link px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all inline-flex items-center gap-1">
+                            Semester 1 <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-60"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="dropdown-menu absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-floating border border-slate-100 p-2 z-50">
+                            <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 px-3 py-1.5">Mata Kuliah Semester 1</div>
+                            <a href="#sem1-filosofi" onclick="switchTab('semester-1', 'sem1-filosofi')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-book-bookmark text-brand-blue opacity-70 mr-2"></i>Filosofi Pendidikan
+                            </a>
+                            <a href="#sem1-peserta-didik" onclick="switchTab('semester-1', 'sem1-peserta-didik')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-users text-brand-blue opacity-70 mr-2"></i>Pemahaman tentang Peserta Didik
+                            </a>
+                            <a href="#sem1-pembelajaran-mendalam" onclick="switchTab('semester-1', 'sem1-pembelajaran-mendalam')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-brain text-brand-blue opacity-70 mr-2"></i>Pembelajaran Mendalam 1
+                            </a>
+                            <a href="#sem1-ppl-terbimbing" onclick="switchTab('semester-1', 'sem1-ppl-terbimbing')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-chalkboard-user text-brand-blue opacity-70 mr-2"></i>PPL Terbimbing
+                            </a>
+                            <a href="#sem1-berdiferensiasi" onclick="switchTab('semester-1', 'sem1-berdiferensiasi')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-layer-group text-brand-blue opacity-70 mr-2"></i>Pembelajaran Berdiferensiasi
+                            </a>
+                            <a href="#sem1-pola-pikir" onclick="switchTab('semester-1', 'sem1-pola-pikir')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-seedling text-brand-blue opacity-70 mr-2"></i>Pola Pikir Bertumbuh
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 4. Semester 2 (Dropdown) -->
+                    <div class="relative dropdown-group">
+                        <button onclick="switchTab('semester-2')" id="nav-semester-2" class="nav-link px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all inline-flex items-center gap-1">
+                            Semester 2 <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-60"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="dropdown-menu absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-floating border border-slate-100 p-2 z-50">
+                            <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400 px-3 py-1.5">Mata Kuliah Semester 2</div>
+                            <a href="#sem2-sosial-emosional" onclick="switchTab('semester-2', 'sem2-sosial-emosional')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-heart-pulse text-brand-blue opacity-70 mr-2"></i>Pembelajaran Sosial Emosional
+                            </a>
+                            <a href="#sem2-pembelajaran-mendalam-2" onclick="switchTab('semester-2', 'sem2-pembelajaran-mendalam-2')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-lightbulb text-brand-blue opacity-70 mr-2"></i>Pembelajaran Mendalam Lanjutan
+                            </a>
+                            <a href="#sem2-islam-pendidikan" onclick="switchTab('semester-2', 'sem2-islam-pendidikan')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-mosque text-brand-blue opacity-70 mr-2"></i>Islam dan Ilmu Pendidikan
+                            </a>
+                            <a href="#sem2-ppl-mandiri" onclick="switchTab('semester-2', 'sem2-ppl-mandiri')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-user-gear text-brand-blue opacity-70 mr-2"></i>PPL Mandiri
+                            </a>
+                            <a href="#sem2-proyek-kepemimpinan" onclick="switchTab('semester-2', 'sem2-proyek-kepemimpinan')" class="block px-3 py-2 text-xs font-medium text-slate-700 hover:bg-brand-lightBlue hover:text-brand-blue rounded-xl transition-colors">
+                                <i class="fa-solid fa-flag text-brand-blue opacity-70 mr-2"></i>Proyek Kepemimpinan
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 5. Karya Inovasi -->
+                    <button onclick="switchTab('karya-inovasi')" id="nav-karya-inovasi" class="nav-link px-4 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue rounded-full transition-all">
+                        Karya Inovasi
+                    </button>
+
+                </nav>
+
+                <!-- Right Action Button -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <a href="#kontak-section" onclick="switchTab('beranda'); setTimeout(() => document.getElementById('kontak-section').scrollIntoView(), 200)" class="bg-brand-blue hover:bg-brand-darkBlue text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-regular fa-paper-plane"></i> Kontak Saya
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="p-2 rounded-xl text-slate-700 hover:bg-slate-100 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Navigation Modal -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3">
+            <button onclick="switchTab('beranda'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-slate-800 hover:bg-brand-lightBlue hover:text-brand-blue">Beranda</button>
+            <button onclick="switchTab('visi-misi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-slate-800 hover:bg-brand-lightBlue hover:text-brand-blue">Visi Misi</button>
+            
+            <div class="border-t border-slate-100 pt-2">
+                <span class="text-xs font-bold uppercase text-slate-400 px-3">Semester 1</span>
+                <button onclick="switchTab('semester-1'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue">Semua Mata Kuliah Sem 1</button>
+            </div>
+
+            <div class="border-t border-slate-100 pt-2">
+                <span class="text-xs font-bold uppercase text-slate-400 px-3">Semester 2</span>
+                <button onclick="switchTab('semester-2'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 text-sm font-medium text-slate-700 hover:text-brand-blue">Semua Mata Kuliah Sem 2</button>
+            </div>
+
+            <div class="border-t border-slate-100 pt-2">
+                <button onclick="switchTab('karya-inovasi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-slate-800 hover:bg-brand-lightBlue hover:text-brand-blue">Karya Inovasi</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- ==========================================
+             SECTION 1: BERANDA
+             ========================================== -->
+        <section id="tab-beranda" class="tab-content block bg-grid-pattern py-12 md:py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                
+                <!-- HERO SECTION -->
+                <div class="bg-white/80 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-slate-200/80 shadow-floating flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden">
+                    
+                    <!-- Decorative Background Accent -->
+                    <div class="absolute -top-24 -right-24 w-80 h-80 bg-brand-lightBlue rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+
+                    <!-- Text Header & Identity -->
+                    <div class="flex-1 space-y-6 z-10">
+                        <div class="inline-flex items-center gap-2 bg-brand-lightBlue border border-brand-blue/20 text-brand-blue px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide">
+                            <span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+                            E-PORTOFOLIO SEMINAR PPG
+                        </div>
+
+                        <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                            Selamat Datang di e-Portofolio<br class="hidden sm:inline"> 
+                            <span class="text-brand-blue">Seminar Pendidikan Profesi Guru</span>
+                        </h1>
+
+                        <div class="space-y-1 pt-2 border-l-4 border-brand-blue pl-4">
+                            <h2 class="text-2xl font-bold text-slate-800">Mukti Muhtadi</h2>
+                            <p class="text-sm font-mono font-semibold text-slate-500">NIM: 2501640500</p>
+                            <p class="text-xs text-brand-blue font-medium">Mahasiswa PPG Calon Guru Universitas Muhammadiyah Purwokerto</p>
+                        </div>
+
+                        <p class="text-slate-600 text-sm leading-relaxed max-w-xl">
+                            Website ini mendokumentasikan refleksi pembelajaran, artefak perkuliahan, jurnal refleksi 4C, serta karya inovasi pembelajaran selama menempuh Program Pendidikan Profesi Guru.
+                        </p>
+
+                        <div class="flex flex-wrap items-center gap-4 pt-2">
+                            <button onclick="switchTab('semester-1')" class="bg-brand-blue hover:bg-brand-darkBlue text-white font-medium text-sm px-6 py-3 rounded-2xl shadow-cursor transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-graduation-cap"></i> Lihat Hasil Belajar
+                            </button>
+                            <button onclick="switchTab('karya-inovasi')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm px-6 py-3 rounded-2xl transition-all">
+                                <i class="fa-solid fa-wand-magic-sparkles text-brand-blue mr-1"></i> Karya Inovasi
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Profile Animated Avatar -->
+                    <div class="z-10 flex-shrink-0">
+                        <div class="relative group">
+                            <!-- Outer Glowing Ring -->
+                            <div class="absolute -inset-1 bg-gradient-to-r from-brand-blue to-brand-accent rounded-full blur opacity-40 group-hover:opacity-75 transition duration-500"></div>
+                            
+                            <!-- Circular Avatar Box -->
+                            <div class="relative w-48 h-48 sm:w-60 sm:h-60 rounded-full border-4 border-white p-1.5 bg-white shadow-2xl avatar-float overflow-hidden flex items-center justify-center">
+                                <img src="mukti.png" 
+                                     alt="Mukti Muhtadi" 
+                                     class="w-full h-full rounded-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                     onerror="this.src='https://ui-avatars.com/api/?name=Mukti+Muhtadi&background=005B9E&color=fff&size=400'">
+                            </div>
+                            
+                            <!-- Floating Badge -->
+                            <div class="absolute bottom-2 right-2 bg-white px-3 py-1.5 rounded-full shadow-lg border border-slate-100 text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-brand-blue"></i> Terverifikasi
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PPG EXPLANATION SECTION -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                    
+                    <!-- Kemendikdasmen & PPG UMP Info Card -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-brand-lightBlue text-brand-blue flex items-center justify-center mb-6 text-xl">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-4">Program Pendidikan Profesi Guru (PPG)</h3>
+                            <div class="space-y-4 text-slate-600 text-sm leading-relaxed">
+                                <p>
+                                    Program Pendidikan Profesi Guru (PPG) dari <strong>Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen)</strong> merupakan program pendidikan yang diselenggarakan untuk mempersiapkan lulusan S1 Kependidikan dan S1/DIV Nonkependidikan yang memiliki bakat dan minat menjadi guru agar menguasai kompetensi guru secara utuh sesuai dengan standar nasional pendidikan.
+                                </p>
+                                <p>
+                                    <strong>PPG Universitas Muhammadiyah Purwokerto (UMP)</strong> berkomitmen mencetak pendidik profesional yang unggul, berkarakter, bermartabat, serta berlandaskan nilai-nilai Al-Islam dan Kemuhammadiyahan untuk menjawab tantangan pendidikan abad ke-21.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Gedung PPG Photo Space -->
+                        <div class="mt-8 pt-6 border-t border-slate-100">
+                            <span class="text-xs font-semibold text-slate-400 block mb-3 uppercase tracking-wider">Gedung Kampus PPG UMP</span>
+                            <div class="relative rounded-2xl overflow-hidden group shadow-md border border-slate-200 h-52 bg-slate-100">
+                                <img src="ppgump.png" 
+                                     alt="Gedung PPG UMP" 
+                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4">
+                                    <span class="text-white text-xs font-medium"><i class="fa-solid fa-location-dot text-red-400 mr-1.5"></i> Gedung PPG Universitas Muhammadiyah Purwokerto</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Maps & Contact PPG UMP -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-brand-lightBlue text-brand-blue flex items-center justify-center mb-6 text-xl">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-4">Lokasi & Kontak PPG UMP</h3>
+                            <p class="text-slate-600 text-sm mb-4">
+                                Jl. KH. Ahmad Dahlan, PO BOX 202, Kembaran, Banyumas, Jawa Tengah 53181.
+                            </p>
+
+                            <!-- Embedded Google Maps -->
+                            <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-sm h-56 mb-6">
+                                <iframe 
+                                    title="Peta Alamat PPG UMP"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3262612739463!2d109.27170887499912!3d-7.428989992581691!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655e8888b14a27%3A0xd6488d8b9f0f9b33!2sUniversitas%20Muhammadiyah%20Purwokerto!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- PPG UMP Contacts -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-100 text-xs">
+                            <a href="https://ppg.ump.ac.id" target="_blank" class="p-3 rounded-xl bg-slate-50 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue font-medium flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-globe text-brand-blue"></i> Website: ppg.ump.ac.id
+                            </a>
+                            <a href="mailto:ppg@ump.ac.id" class="p-3 rounded-xl bg-slate-50 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue font-medium flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-envelope text-brand-blue"></i> Email: ppg@ump.ac.id
+                            </a>
+                            <div class="p-3 rounded-xl bg-slate-50 text-slate-700 font-medium flex items-center gap-2">
+                                <i class="fa-solid fa-phone text-brand-blue"></i> Telp: (0281) 636751
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 text-slate-700 font-medium flex items-center gap-2">
+                                <i class="fa-brands fa-instagram text-brand-blue"></i> IG: @ppg.ump.ac.id 
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- HUBUNGI SAYA SECTION -->
+                <div id="kontak-section" class="bg-gradient-to-r from-brand-blue to-brand-darkBlue text-white rounded-3xl p-8 md:p-12 shadow-floating relative overflow-hidden">
+                    <div class="max-w-3xl space-y-6 relative z-10">
+                        <span class="text-xs font-bold tracking-widest uppercase text-brand-lightBlue opacity-90">Mari Terhubung</span>
+                        <h2 class="text-3xl font-extrabold">Hubungi Saya</h2>
+                        <p class="text-slate-200 text-sm leading-relaxed">
+                            Jika Anda memiliki pertanyaan, diskusi kolaboratif seputar inovasi pembelajaran, atau masukan mengenai e-portofolio ini, silakan hubungi melalui saluran di bawah ini:
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                            <!-- Email -->
+                            <a href="mailto:muktimuhtadi@icloud.com" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col items-center text-center gap-2 transition-all hover:-translate-y-1">
+                                <i class="fa-solid fa-envelope text-2xl text-cyan-300"></i>
+                                <span class="text-xs text-slate-300 font-medium">Surat Elektronik</span>
+                                <span class="text-xs font-bold text-white break-all">muktimuhtadi@icloud.com</span>
+                            </a>
+
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/6289669009192" target="_blank" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col items-center text-center gap-2 transition-all hover:-translate-y-1">
+                                <i class="fa-brands fa-whatsapp text-2xl text-emerald-400"></i>
+                                <span class="text-xs text-slate-300 font-medium">WhatsApp</span>
+                                <span class="text-xs font-bold text-white">+62 896-6900-9192</span>
+                            </a>
+
+                            <!-- Instagram -->
+                            <a href="https://instagram.com/muhtadi6890" target="_blank" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col items-center text-center gap-2 transition-all hover:-translate-y-1">
+                                <i class="fa-brands fa-instagram text-2xl text-pink-300"></i>
+                                <span class="text-xs text-slate-300 font-medium">Instagram</span>
+                                <span class="text-xs font-bold text-white">@muhtadi6890</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION 2: VISI MISI
+             ========================================== -->
+        <section id="tab-visi-misi" class="tab-content hidden py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                
+                <!-- Section Title Header -->
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-lightBlue px-3 py-1 rounded-full">Landasan Filosofis</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Visi & Misi Pendidikan</h2>
+                    <p class="text-slate-600 text-sm">Prinsip dasar dan nilai-nilai penggerak dalam mewujudkan transformasi pendidikan berpikiran maju.</p>
+                </div>
+
+                <!-- Grid Layout: Left PDF Embed, Right Highlight Content -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Left: PDF Embed View -->
+                    <div class="lg:col-span-7 bg-white p-4 rounded-3xl border border-slate-200 shadow-md">
+                        <div class="flex items-center justify-between mb-3 px-2">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-file-pdf text-red-500 text-base"></i> Dokumen Visi Misi Pendidikan PDF
+                            </span>
+                            <a href="https://drive.google.com/file/d/1DeQtSiONUE5r8FQB_hLJ-rW7Fqu3FwFl/view?usp=sharing" target="_blank" class="text-xs font-medium text-brand-blue hover:underline flex items-center gap-1">
+                                Buka di Tab Baru <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                            </a>
+                        </div>
+
+                        <div class="pdf-iframe-container rounded-2xl overflow-hidden border border-slate-100 bg-slate-50">
+                            <iframe 
+                                title="Dokumen Visi Misi PDF"
+                                src="https://drive.google.com/file/d/1DeQtSiONUE5r8FQB_hLJ-rW7Fqu3FwFl/preview" 
+                                class="w-full h-full border-0">
+                            </iframe>
+                        </div>
+                    </div>
+
+                    <!-- Right: Text Highlights -->
+                    <div class="lg:col-span-5 space-y-6">
+                        
+                        <!-- Visi Card -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm border-l-4 border-l-brand-blue space-y-3">
+                            <div class="flex items-center gap-2 text-brand-blue font-bold text-sm">
+                                <i class="fa-solid fa-compass text-lg"></i>
+                                <span>VISI PENDIDIKAN</span>
+                            </div>
+                            <p class="text-slate-700 text-sm leading-relaxed font-medium">
+                                "Mewujudkan pendidik profesional unggul yang berkarakter, inovatif, serta Mampu memerdekakan pembelajaran peserta didik berlandaskan nilai-nilai luhur Pancasila dan kearifan lokal."
+                            </p>
+                        </div>
+
+                        <!-- Misi Highlights -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                            <div class="flex items-center gap-2 text-brand-blue font-bold text-sm mb-2">
+                                <i class="fa-solid fa-bullseye text-lg"></i>
+                                <span>POIN-POIN UTAMA (HIGHLIGHT MISI)</span>
+                            </div>
+
+                            <ul class="space-y-3 text-xs text-slate-600">
+                                <li class="flex items-start gap-2.5">
+                                    <span class="w-5 h-5 rounded-full bg-brand-lightBlue text-brand-blue flex items-center justify-center font-bold text-[10px] flex-shrink-0">1</span>
+                                    <span><strong>Pembelajaran Menyenangkan & Berdiferensiasi:</strong> Merancang strategi instruksional yang menyesuaikan kebutuhan unik dan gaya belajar tiap siswa.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="w-5 h-5 rounded-full bg-brand-lightBlue text-brand-blue flex items-center justify-center font-bold text-[10px] flex-shrink-0">2</span>
+                                    <span><strong>Integrasi Teknologi & Inovasi:</strong> Memanfaatkan media digital modern untuk meningkatkan efektivitas serta daya tarik materi pelajaran.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="w-5 h-5 rounded-full bg-brand-lightBlue text-brand-blue flex items-center justify-center font-bold text-[10px] flex-shrink-0">3</span>
+                                    <span><strong>Pendidikan Karakter & Moral:</strong> Menanamkan nilai sosial-emosional, etika, serta kecintaan terhadap budaya bangsa.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="w-5 h-5 rounded-full bg-brand-lightBlue text-brand-blue flex items-center justify-center font-bold text-[10px] flex-shrink-0">4</span>
+                                    <span><strong>Refleksi & Pengembangan Berkelanjutan:</strong> Secara rutin mengevaluasi praktik mengajar demi peningkatan mutu pendidikan berkesinambungan.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-brand-lightBlue/60 border border-brand-blue/20 rounded-2xl p-5 text-xs text-brand-darkBlue leading-relaxed">
+                            <i class="fa-solid fa-quote-left text-brand-blue text-base mr-1"></i>
+                            Pendidikan bukan sekadar mentransfer ilmu, tetapi menuntun segala kodrat yang ada pada anak agar mereka dapat mencapai keselamatan dan kebahagiaan yang setinggi-tingginya.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION 3: SEMESTER 1
+             ========================================== -->
+        <section id="tab-semester-1" class="tab-content hidden py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-lightBlue px-3 py-1 rounded-full">Portofolio Akademik</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Semester 1</h2>
+                    <p class="text-slate-600 text-sm">Dokumentasi 6 Mata Kuliah, Refleksi 4C, Analisis Artefak, dan Konsep Pembelajaran Utama.</p>
+                </div>
+
+                <!-- COURSE 1: Filosofi Pendidikan -->
+                <div id="sem1-filosofi" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 01</span>
+                            <h3 class="text-xl font-bold text-slate-900">Filosofi Pendidikan dan Pendidikan Nilai</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1SudkriL-Dv5C3OhLuJhKPhJ9RJYTVyLJ/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Filosofi Pendidikan PDF" src="https://drive.google.com/file/d/1SudkriL-Dv5C3OhLuJhKPhJ9RJYTVyLJ/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <!-- Refleksi 4C -->
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Mengaitkan konsep pandangan Ki Hajar Dewantara tentang pendidikan yang menuntun kodrat anak dengan realitas kelas masa kini.</p>
+                                <p><strong>Challenge:</strong> Menghadapi tantangan dalam mengubah paradigma pembelajaran lama yang berpusat pada guru menjadi pembelajaran berpusat pada murid.</p>
+                                <p><strong>Concept:</strong> Pemahaman mendalam mengenai sistem among, kodrat alam, dan kodrat zaman dalam membentuk budi pekerti.</p>
+                                <p><strong>Change:</strong> Berkomitmen menerapkan pembelajaran yang humanis, ramah anak, serta berorientasi pada kemerdekaan berpikir siswa.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Artefak berupa esai dan peta konsep mengenai pemikiran Ki Hajar Dewantara yang menunjukkan pemahaman kritis atas sistem pendidikan nasional.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Menuntun (bukan menuntut), sistem Among, dan pendidikan karakter.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Menjadi fasilitator yang menciptakan suasana belajar aman, nyaman, dan memberdayakan potensi unik siswa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 2: Pemahaman tentang Peserta Didik -->
+                <div id="sem1-peserta-didik" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 02</span>
+                            <h3 class="text-xl font-bold text-slate-900">Pemahaman tentang Peserta Didik dan Pembelajaran</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1CRQc3cyKHf-m1AdLXa0rXTslsEKmSeMn/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Pemahaman Peserta Didik PDF" src="https://drive.google.com/file/d/1CRQc3cyKHf-m1AdLXa0rXTslsEKmSeMn/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Menghubungkan teori perkembangan kognitif, sosio-emosional, dan tahapan perkembangan fisik peserta didik.</p>
+                                <p><strong>Challenge:</strong> Menangani keragaman latar belakang latar sosial, budaya, dan kesiapan belajar peserta didik di satu kelas.</p>
+                                <p><strong>Concept:</strong> Developmentally Appropriate Practice (DAP), Zone of Proximal Development (ZPD), dan asesmen diagnostik.</p>
+                                <p><strong>Change:</strong> Melakukan profiling peserta didik secara komprehensif sebelum menyusun perancangan modul ajar.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Dokumen hasil asesmen diagnostik nonsains & profil karakteristik peserta didik di kelas observasi PPL.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Pemahaman karakteristik perkembangan peserta didik sebagai dasar merancang strategi pembelajaran tepat sasaran.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Mengintegrasikan pembelajaran tanggap budaya (Culturally Responsive Teaching) dalam rancangan kelas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 3: Pembelajaran Mendalam 1 -->
+                <div id="sem1-pembelajaran-mendalam" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 03</span>
+                            <h3 class="text-xl font-bold text-slate-900">Pembelajaran Mendalam dan Asesmen Dasar</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1u6UCaUiBFgX0o9wlCqrP4GMorX306g1B/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Pembelajaran Mendalam PDF" src="https://drive.google.com/file/d/1u6UCaUiBFgX0o9wlCqrP4GMorX306g1B/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Menghubungkan perancangan asesmen otentik dengan tujuan pembelajaran bernalar kritis.</p>
+                                <p><strong>Challenge:</strong> Menyusun rubric asesmen performa yang objektif dan mengukur pemahaman tingkat tinggi (HOTS).</p>
+                                <p><strong>Concept:</strong> Principles of Understanding by Design (UbD) dan backward design dalam penyusunan asesmen.</p>
+                                <p><strong>Change:</strong> Menggunakan pola alur UbD mulai dari menentukan hasil yang diharapkan sebelum aktivitas pembelajaran.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Modul ajar berbasis Understanding by Design (UbD) lengkap dengan rubrik asesmen formatif dan sumatif.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Perancangan mundur (Backward Design) & Asesmen Berkelanjutan.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Mengoptimalkan umpan balik konstruktif (*meaningful feedback*) kepada peserta didik secara berkala.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 4: PPL Terbimbing -->
+                <div id="sem1-ppl-terbimbing" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 04</span>
+                            <h3 class="text-xl font-bold text-slate-900">Praktik Pengalaman Lapangan (PPL) Terbimbing</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1Ejfs6XmNWWvVy6Cc9efuDiT-mPoiuAdK/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="PPL Terbimbing PDF" src="https://drive.google.com/file/d/1Ejfs6XmNWWvVy6Cc9efuDiT-mPoiuAdK/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Mengaplikasikan teori perkuliahan langsung ke dalam suasana kelas riil di sekolah latihan PPL.</p>
+                                <p><strong>Challenge:</strong> Pengelolaan dinamika kelas dan penyesuaian durasi waktu saat menerapkan metode aktif.</p>
+                                <p><strong>Concept:</strong> Guided teaching practice, pendampingan guru pamong, dan refleksi pasca-pembelajaran.</p>
+                                <p><strong>Change:</strong> Lebih responsif terhadap fleksibilitas situasi kelas tanpa mengabaikan capaian pembelajaran.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Jurnal refleksi mingguan, rekaman video terbimbing, dan lembar observasi Guru Pamong & DPL.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Pelaksanaan pembelajaran terbimbing dengan pendampingan intensif & evaluasi berkelanjutan.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Menuntaskan setiap siklus mengajar dengan refleksi berbasis data bukti belajar siswa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 5: Pembelajaran Berdiferensiasi -->
+                <div id="sem1-berdiferensiasi" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 05</span>
+                            <h3 class="text-xl font-bold text-slate-900">Pembelajaran Berdiferensiasi</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1U8WOmzQwCsuM3x5Oz7-DEj4hPATmsYS0/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Pembelajaran Berdiferensiasi PDF" src="https://drive.google.com/file/d/1U8WOmzQwCsuM3x5Oz7-DEj4hPATmsYS0/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Menghubungkan keberagaman modalitas belajar peserta didik dengan strategi diferensiasi konten, proses, dan produk.</p>
+                                <p><strong>Challenge:</strong> Menyiapkan bahan ajar serta tugas yang bervariasi tanpa menambah beban administrasi secara berlebihan.</p>
+                                <p><strong>Concept:</strong> Diferensiasi Konten, Proses, Produk, dan Lingkungan Belajar.</p>
+                                <p><strong>Change:</strong> Memberikan pilihan variatif (*choice board*) bagi siswa dalam mendemonstrasikan pemahaman mereka.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Rancangan Pembelajaran Berdiferensiasi (RPP/Modul Ajar) dan lembar kerja peserta didik berjenjang.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Adil tidak harus sama; memenuhi kebutuhan belajar siswa secara inklusif.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Mengintegrasikan strategi diferensiasi secara konsisten di setiap unit materi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 6: Pola Pikir Bertumbuh -->
+                <div id="sem1-pola-pikir" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 06</span>
+                            <h3 class="text-xl font-bold text-slate-900">Pola Pikir Bertumbuh (Growth Mindset)</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1B_nnaBajMRbWlp3zrD04rjJbJedSk9CM/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Pola Pikir Bertumbuh PDF" src="https://drive.google.com/file/d/1B_nnaBajMRbWlp3zrD04rjJbJedSk9CM/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Mengaitkan konsep Carol Dweck tentang Growth Mindset dengan efikasi diri calon pendidik.</p>
+                                <p><strong>Challenge:</strong> Mengikis *fixed mindset* atau ketakutan akan kegagalan dalam mencoba metode pembelajaran baru.</p>
+                                <p><strong>Concept:</strong> Kekuatan kata "Belum" (*The Power of Yet*), resiliensi, dan apresiasi terhadap proses usaha.</p>
+                                <p><strong>Change:</strong> Membiasakan pujian berbasis usaha (*process praise*) daripada hasil akhir semata.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Jurnal refleksi kepribadian, rencana aksi Growth Mindset, dan materi budaya positif di sekolah.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Kemampuan belajar dan kecerdasan dapat berkembang melalui latihan dan ketekunan.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Membangun ekosistem kelas yang merayakan kesalahan sebagai sarana belajar terbaik.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION 4: SEMESTER 2
+             ========================================== -->
+        <section id="tab-semester-2" class="tab-content hidden py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-lightBlue px-3 py-1 rounded-full">Portofolio Lanjutan</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900">Semester 2</h2>
+                    <p class="text-slate-600 text-sm">Dokumentasi 5 Mata Kuliah Lanjutan, Refleksi 4C, dan Penguasaan Praktik Lapangan Mandiri.</p>
+                </div>
+
+                <!-- COURSE 1: Pembelajaran Sosial Emosional -->
+                <div id="sem2-sosial-emosional" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 01</span>
+                            <h3 class="text-xl font-bold text-slate-900">Pembelajaran Sosial Emosional (SEL)</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1Qvtykc7retDl8Ez6JJU0xhqgWfyMIB0c/view?usp=share_link" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Pembelajaran Sosial Emosional PDF" src="https://drive.google.com/file/d/1Qvtykc7retDl8Ez6JJU0xhqgWfyMIB0c/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Menghubungkan 5 kompetensi sosial emosional (CASEL) dengan kesiapan emosi mengajar guru.</p>
+                                <p><strong>Challenge:</strong> Mengintegrasikan teknik STOP atau kesadaran penuh (*mindfulness*) di tengah kesibukan materi akademis.</p>
+                                <p><strong>Concept:</strong> Self-awareness, Self-management, Social awareness, Relationship skills, & Responsible decision-making.</p>
+                                <p><strong>Change:</strong> Rutin menyisipkan rutinitas *check-in* emosi siswa sebelum memulai pembelajaran.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Program latihan kesejahteraan psikologis (*well-being*) dan lembar aktivitas *mindfulness* untuk siswa.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Kesejahteraan emosional guru dan siswa adalah fondasi utama keberhasilan akademis.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Menciptakan ruang kelas aman secara emosional (*psychologically safe classroom*).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 2: Pembelajaran Mendalam & Asesmen Lanjutan -->
+                <div id="sem2-pembelajaran-mendalam-2" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 02</span>
+                            <h3 class="text-xl font-bold text-slate-900">Pembelajaran Mendalam dan Asesmen Lanjutan</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1wTMlwTTHju5CbtN3AKdN14Bi7VvtjO5N/view?usp=share_link" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Pembelajaran Mendalam Lanjutan PDF" src="https://drive.google.com/file/d/1wTMlwTTHju5CbtN3AKdN14Bi7VvtjO5N/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Menghubungkan prinsip studi kasus kompleks dan project-based learning dengan penyelesaian masalah nyata.</p>
+                                <p><strong>Challenge:</strong> Merancang alat evaluasi berbasis portofolio otentik dengan kriteria holistik.</p>
+                                <p><strong>Concept:</strong> Asesmen autentik tingkat tinggi, pameran karya (*exhibition*), dan umpan balik teman sejawat.</p>
+                                <p><strong>Change:</strong> Mengalihkan asesmen berbasis tes tertulis ke arah proyek performa dunia nyata.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Desain Instrumen Asesmen Portofolio & Rubrik Penilaian Proyek Inovatif.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Evaluasi otentik berorientasi pemecahan masalah era digital.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Mengembangkan platform asesmen digital yang transparan dan *real-time*.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 3: Islam dan Ilmu Pendidikan -->
+                <div id="sem2-islam-pendidikan" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 03</span>
+                            <h3 class="text-xl font-bold text-slate-900">Islam dan Ilmu Pendidikan</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1LEPgrUMNYyA3SJ41UkBPCLXJRM7MyzjA/view?usp=share_link" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Islam dan Ilmu Pendidikan PDF" src="https://drive.google.com/file/d/1LEPgrUMNYyA3SJ41UkBPCLXJRM7MyzjA/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Mengintegrasikan nilai-nilai keislaman dan peradaban ilmiah dalam pembelajaran sehari-hari di UMP.</p>
+                                <p><strong>Challenge:</strong> Menyajikan nilai moral keagamaan secara inklusif dan kontekstual tanpa kesan mendikte.</p>
+                                <p><strong>Concept:</strong> Integrasi ilmu dan agama, etika keguruan Islami, serta pendidikan berkarakter akhlakul karimah.</p>
+                                <p><strong>Change:</strong> Menjadi teladan (*uswah hasanah*) dalam integritas profesionalitas mengajar.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Makalah integrasi AIK dalam materi pembelajaran dan rancangan pembiasaan karakter luhur.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Pendidikan holistik yang menyeimbangkan kecerdasan intelektual, moral, dan spiritual.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Menanamkan nilai keberadaban dan etika pemanfaatan teknologi pada siswa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 4: PPL Mandiri -->
+                <div id="sem2-ppl-mandiri" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 04</span>
+                            <h3 class="text-xl font-bold text-slate-900">Praktik Pengalaman Lapangan (PPL) Mandiri</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1SFyzq4XrOM-gB2BYTH-paFz2JPN05i8e/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="PPL Mandiri PDF" src="https://drive.google.com/file/d/1SFyzq4XrOM-gB2BYTH-paFz2JPN05i8e/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Mengambil alih peran mengajar secara penuh (*autonomous teaching*) di kelas mitra.</p>
+                                <p><strong>Challenge:</strong> Menangani situasi tak terduga serta mengelola manajemen kurikulum secara efisien.</p>
+                                <p><strong>Concept:</strong> Kemandirian mengajar, Penelitian Tindakan Kelas (PTK), dan kepemimpinan pembelajaran.</p>
+                                <p><strong>Change:</strong> Melakukan perbaikan pembelajaran secara terencana melalui siklus PTK berkesinambungan.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Laporan PTK PPL Mandiri, video dokumentasi mengajar mandiri, dan lembar asesmen siswa.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Penguasaan utuh peran guru profesional di lingkungan sekolah nyata.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Terus mengasah keahlian reflektif untuk meningkatkan mutu pembelajaran siswa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COURSE 5: Proyek Kepemimpinan -->
+                <div id="sem2-proyek-kepemimpinan" class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue tracking-wider uppercase">Mata Kuliah 05</span>
+                            <h3 class="text-xl font-bold text-slate-900">Proyek Kepemimpinan</h3>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1BdOflY9a-vr7J70pB-eqo72vKE-GHU5e/view?usp=sharing" target="_blank" class="text-xs bg-slate-100 hover:bg-brand-lightBlue text-slate-700 hover:text-brand-blue px-3 py-1.5 rounded-full transition-colors inline-flex items-center gap-1.5 self-start">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Link Google Drive
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-6 border border-slate-200 rounded-2xl overflow-hidden h-[500px]">
+                            <iframe title="Proyek Kepemimpinan PDF" src="https://drive.google.com/file/d/1BdOflY9a-vr7J70pB-eqo72vKE-GHU5e/preview" class="w-full h-full border-0"></iframe>
+                        </div>
+
+                        <div class="lg:col-span-6 space-y-4 text-xs text-slate-600">
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-blue flex items-center gap-1.5"><i class="fa-solid fa-arrows-spin"></i> Refleksi 4C</h4>
+                                <p><strong>Connection:</strong> Menghubungkan kepemimpinan edukatif dengan kontribusi sosial di masyarakat / komunitas sasaran.</p>
+                                <p><strong>Challenge:</strong> Mengkoordinasikan tim, mengelola anggaran, serta menjalin pemangku kepentingan (*stakeholders*).</p>
+                                <p><strong>Concept:</strong> Service Learning, Project Management (Design Thinking), dan keberlanjutan program.</p>
+                                <p><strong>Change:</strong> Menjadi agen perubahan (*agent of change*) tidak hanya di dalam kelas tapi juga di masyarakat.</p>
+                            </div>
+
+                            <div class="bg-brand-lightBlue/40 p-4 rounded-2xl space-y-1 border border-brand-blue/10">
+                                <h4 class="font-bold text-slate-900 text-sm text-brand-darkBlue"><i class="fa-solid fa-box-archive mr-1"></i> Analisis Artefak</h4>
+                                <p>Proposal Proyek Kepemimpinan, Laporan Pertanggungjawaban (LPJ), dan dokumentasi dampak sosial.</p>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl space-y-1 border border-slate-200/60">
+                                <h4 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Konsep Utama & Rencana Perubahan</h4>
+                                <p><strong>Konsep Utama:</strong> Kepemimpinan transformasional berlandaskan pengabdian masyarakat.</p>
+                                <p><strong>Rencana Masa Depan:</strong> Menginisiasi komunitas belajar guru untuk berbagi praktik baik pembelajaran.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECTION 5: KARYA INOVASI
+             ========================================== -->
+        <section id="tab-karya-inovasi" class="tab-content hidden py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                
+                <!-- Main Header Title -->
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-lightBlue px-3 py-1 rounded-full">Inovasi Pembelajaran Digital</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
+                        “Mengirim Pesan Anekdot Melalui WhatsAnekdot”
+                    </h2>
+                    <p class="text-slate-600 text-sm">
+                        Media pembelajaran berbasis antarmuka percakapan interaktif untuk meningkatkan minat dan keterampilan menulis teks anekdot peserta didik.
+                    </p>
+                </div>
+
+                <!-- 1. LIVE WEBSITE SHOWCASE IFRAME -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-floating space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold text-brand-blue uppercase">Inovasi Web App</span>
+                            <h3 class="text-lg font-bold text-slate-900">Website Interactive Media: WhatsAnekdot</h3>
+                        </div>
+                        <a href="https://muktimuhtadi.github.io/WhatsAnekdot/" target="_blank" class="bg-brand-blue hover:bg-brand-darkBlue text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all inline-flex items-center gap-1.5 self-start">
+                            Buka Website WhatsAnekdot <i class="fa-solid fa-external-link"></i>
+                        </a>
+                    </div>
+
+                    <!-- Web preview frame -->
+                    <div class="rounded-2xl border border-slate-200 overflow-hidden shadow-inner h-[500px] bg-slate-900 relative">
+                        <iframe 
+                            title="Website WhatsAnekdot"
+                            src="https://muktimuhtadi.github.io/WhatsAnekdot/" 
+                            class="w-full h-full border-0">
+                        </iframe>
+                    </div>
+                </div>
+
+                <!-- 2. YOUTUBE VIDEO SECTION -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-brands fa-youtube text-red-600 text-2xl"></i>
+                        <h3 class="text-lg font-bold text-slate-900">Video Demonstration / Tutorial Inovasi</h3>
+                    </div>
+
+                    <div class="responsive-iframe-container rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+                        <iframe 
+                            src="https://www.youtube.com/embed/q-f1ffyooNM?si=Gxany2bm3s8W_jUb" 
+                            title="YouTube video player" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+
+                <!-- 3. MODUL AJAR PDF & 4. PRESENTATION PPTX SLIDES (GRID 2 COL) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Modul Ajar PDF -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf text-red-500"></i> Modul Ajar Inovasi
+                                </span>
+                                <a href="https://drive.google.com/file/d/1tNXK2VepGHsqMpuVX55Wn96OOvd7henR/view?usp=sharing" target="_blank" class="text-xs text-brand-blue hover:underline">
+                                    Buka File PDF
+                                </a>
+                            </div>
+                            <div class="h-96 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+                                <iframe title="Modul Ajar PDF" src="https://drive.google.com/file/d/1tNXK2VepGHsqMpuVX55Wn96OOvd7henR/preview?usp=sharing" class="w-full h-full border-0" allow="autoplay"></iframe>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 italic">Perancangan skenario pembelajaran berbasis WhatsAnekdot sesuai Kurikulum Merdeka.</p>
+                    </div>
+
+                    <!-- Slide PPTX Presentation -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-powerpoint text-orange-500"></i> Slide Presentasi PPTX
+                                </span>
+                                <a href="https://docs.google.com/presentation/d/1MG45KFeQ38xN_bHrggQ_ZghkWeXVyLCy/edit?usp=sharing" target="_blank" class="text-xs text-brand-blue hover:underline">
+                                    Buka Google Slides
+                                </a>
+                            </div>
+                            <div class="h-96 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+                                <iframe 
+                                    title="Google Slides PPTX"
+                                    src="https://docs.google.com/presentation/d/18YHFqtJWLrteJYT8n9L9RJmufnc-CYkA/edit?usp=sharing&ouid=104544792283734076596&rtpof=true&sd=true" 
+                                    class="w-full h-full border-0" 
+                                    allowfullscreen="true">
+                                </iframe>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 italic">Materi presentasi pengenalan fitur dan efektivitas media WhatsAnekdot.</p>
+                    </div>
+
+                </div>
+
+                <!-- 5. INTERACTIVE CHART & SURVEY RESULT SECTION -->
+                <div class="bg-gradient-to-br from-white to-slate-50 rounded-3xl p-6 md:p-8 border border-slate-200 shadow-md space-y-8">
+
+                    <div class="text-center max-w-2xl mx-auto space-y-2">
+                        <span class="text-xs font-bold text-brand-blue bg-brand-lightBlue px-3 py-1 rounded-full uppercase tracking-wider">Hasil Respon Peserta Didik</span>
+                        <h3 class="text-2xl font-bold text-slate-900">Umpan Balik Penggunaan Media WhatsAnekdot</h3>
+                        <p class="text-xs text-slate-600">Angket akhir (14 pernyataan) dan perbandingannya dengan angket awal (8 pernyataan), diisi oleh 32 peserta didik kelas XI APHP.</p>
+                    </div>
+
+                    <!-- Sorotan pernyataan unggulan -->
+                    <div class="bg-brand-lightBlue/60 border-2 border-brand-blue/30 p-5 rounded-2xl flex flex-col md:flex-row md:items-center gap-4">
+                        <div class="shrink-0 text-center md:text-left">
+                            <span class="inline-block text-[10px] font-bold text-white bg-brand-blue px-2 py-0.5 rounded-full uppercase tracking-wider">Pernyataan Unggulan</span>
+                            <div class="mt-1 text-3xl font-extrabold text-brand-blue">31 / 32 <span class="text-base font-semibold text-slate-700">(96,9%)</span></div>
+                            <p class="text-[11px] text-slate-600">Skor rata-rata <strong>3,59 dari 4</strong>, tertinggi dari 14 poin</p>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-800 leading-snug md:border-l md:border-brand-blue/20 md:pl-4">
+                            &ldquo;Menulis media ini <u>tidak terasa seperti menulis teks</u>, akan tetapi terasa seperti <u>mengirim pesan (chat WhatsApp) kepada orang lain</u>.&rdquo;
+                        </p>
+                    </div>
+
+                    <!-- Semua pernyataan -->
+                    <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h4 class="text-sm font-bold text-slate-900">Hasil Seluruh Pernyataan Angket Akhir (14 poin, dalam %)</h4>
+                            <div class="flex flex-wrap gap-3 text-[11px] text-slate-600" id="likertLegend"></div>
+                        </div>
+                        <div id="allItemsChart" class="w-full"></div>
+                    </div>
+
+                    <!-- Perbandingan angket awal vs akhir -->
+                    <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                        <div class="space-y-1">
+                            <h4 class="text-sm font-bold text-slate-900">Sebelum dan Sesudah Memakai Media (% siswa yang setuju)</h4>
+                            <p class="text-[11px] text-slate-500">Angket awal mengukur <strong>kesulitan</strong> yang dialami, angket akhir mengukur <strong>bantuan media</strong> pada aspek yang sama.</p>
+                        </div>
+                        <div id="compareChart" class="w-full"></div>
+                    </div>
+
+                    <p class="text-[11px] text-slate-400 italic">
+                        *Data dari angket awal dan angket akhir penerapan media WhatsAnekdot (skala 1&ndash;4: Sangat Tidak Setuju sampai Sangat Setuju). Dari 34 peserta didik, 2 tidak masuk sehingga responden berjumlah 32.
+                    </p>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200/80 py-8 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <div class="flex items-center justify-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-brand-blue text-white flex items-center justify-center text-xs font-bold">eP</div>
+                <span class="font-bold text-slate-800">e-Portofolio PPG Mukti Muhtadi</span>
+            </div>
+            <p>© 2026 Mukti Muhtadi • 2501640500 • PPG Calon Guru • Universitas Muhammadiyah Purwokerto.</p>
+            <p class="text-[10px] text-slate-400">Dibuat dengan HTML, CSS, dan JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT FOR NAVIGATION & INTERACTIVITY -->
+    <script>
+        // Function to switch between main tabs (Beranda, Visi Misi, Sem 1, Sem 2, Karya Inovasi)
+        function switchTab(tabId, targetAnchorId = null) {
+            // Hide all tab content sections
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.add('hidden'));
+
+            // Show target tab
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
+
+            // Update active state in Navigation Links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // Scroll to top or to specific course anchor
+            if (targetAnchorId) {
+                setTimeout(() => {
+                    const el = document.getElementById(targetAnchorId);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+        // Initialize ChartJS for Innovation Section
+        window.onload = function() {
+            const N = 32;
+            const cats = [
+                { key: 'STS', label: 'Sangat Tidak Setuju', color: '#94A3B8' },
+                { key: 'TS',  label: 'Tidak Setuju',        color: '#CBD5E1' },
+                { key: 'S',   label: 'Setuju',              color: '#5FA8DE' },
+                { key: 'SS',  label: 'Sangat Setuju',       color: '#005B9E' }
+            ];
+            // [pernyataan, STS, TS, S, SS] dari angket akhir (32 responden)
+            const items = [
+                ['Lebih mudah membedakan bagian struktur anekdot', 0, 3, 19, 10],
+                ['Fitur Mari Menulis membantu menyusun anekdot berurutan', 0, 0, 23, 9],
+                ['Membantu menemukan ide atau tema anekdot', 0, 0, 27, 5],
+                ['Membantu membuat bagian krisis yang lebih lucu dan bermakna', 0, 2, 23, 7],
+                ['Penjelasan kaidah kebahasaan pada chat membantu', 0, 1, 22, 9],
+                ['Fitur KBBI dan EYD membantu ejaan dan kata baku', 0, 1, 15, 16],
+                ['Lebih percaya diri menulis anekdot', 1, 3, 23, 5],
+                ['Lebih termotivasi menulis anekdot', 0, 4, 26, 2],
+                ['Media mudah digunakan', 0, 2, 13, 17],
+                ['Tampilan visual media menarik', 0, 3, 19, 10],
+                ['Menulis terasa seperti mengirim pesan (chat WhatsApp), bukan menulis teks', 0, 1, 11, 20],
+                ['Video pembelajaran membantu memahami materi', 1, 0, 26, 5],
+                ['Ingin memakai media seperti ini lagi pada materi lain', 0, 2, 22, 8],
+                ['Secara keseluruhan, media bermanfaat meningkatkan keterampilan menulis', 0, 2, 22, 8]
+            ];
+            const HL = 10; // indeks pernyataan unggulan
+            const toRgba = (hex, a) => `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})`;
+            const fmt = (v) => (Math.round(v * 10) / 10).toString().replace('.', ',');
+
+            // Legenda & rincian
+            const legend = document.getElementById('likertLegend');
+            if (legend) legend.innerHTML = cats.map(c =>
+                `<span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:${c.color}"></span>${c.label}</span>`).join('');
+
+            // 2) Diagram batang bertumpuk: semua pernyataan (HTML/CSS murni, tanpa library)
+            const allEl = document.getElementById('allItemsChart');
+            if (allEl) {
+                const head = `<div style="display:flex;align-items:center;gap:12px;padding:0 8px 6px;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.05em">
+                    <div class="w-2/5 md:w-1/3">Pernyataan</div><div style="flex:1">Sebaran jawaban</div><div style="width:56px;text-align:right">Setuju</div></div>`;
+                const rows = items.map((it, i) => {
+                    const hl = i === HL;
+                    const pct = (it[3] + it[4]) / N * 100;
+                    const segs = cats.map((c, ci) => {
+                        const n = it[ci + 1];
+                        if (!n) return '';
+                        const w = n / N * 100;
+                        const bg = hl ? c.color : toRgba(c.color, 0.6);
+                        const color = ci >= 2 ? '#ffffff' : '#334155';
+                        return `<div title="${c.label}: ${n} siswa (${fmt(w)}%)" style="width:${w}%;background:${bg};color:${color};height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${hl && n >= 2 ? n : ''}</div>`;
+                    }).join('');
+                    if (hl) {
+                        return `<div style="display:flex;align-items:center;gap:12px;padding:14px 8px;margin:6px 0;background:#E6F0FA;border-left:4px solid #005B9E;border-radius:12px;box-shadow:0 4px 14px -6px rgba(0,91,158,.35)">
+                            <div class="w-2/5 md:w-1/3">
+                                <span style="display:inline-block;font-size:9px;font-weight:700;color:#fff;background:#005B9E;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em">&#9733; Pernyataan Unggulan</span>
+                                <div style="margin-top:4px;font-size:12px;font-weight:700;color:#005B9E;line-height:1.35">${i + 1}. ${it[0]}</div>
+                            </div>
+                            <div style="flex:1;display:flex;height:28px;border-radius:999px;overflow:hidden;background:#E2E8F0">${segs}</div>
+                            <div style="width:56px;text-align:right;font-size:16px;font-weight:800;color:#005B9E">${fmt(pct)}%</div>
+                        </div>`;
+                    }
+                    return `<div style="display:flex;align-items:center;gap:12px;padding:7px 8px;border-bottom:1px solid #F1F5F9">
+                        <div class="w-2/5 md:w-1/3" style="font-size:11px;color:#475569;line-height:1.35">${i + 1}. ${it[0]}</div>
+                        <div style="flex:1;display:flex;height:14px;border-radius:999px;overflow:hidden;background:#F1F5F9">${segs}</div>
+                        <div style="width:56px;text-align:right;font-size:11px;font-weight:600;color:#64748B">${fmt(pct)}%</div>
+                    </div>`;
+                }).join('');
+                allEl.innerHTML = head + rows;
+            }
+
+            // 3) Perbandingan angket awal vs akhir (8 aspek yang berpasangan)
+            const awal = [
+                ['Membedakan bagian struktur anekdot', 0, 0, 26, 6],
+                ['Menyusun bagian anekdot secara berurutan', 0, 0, 24, 8],
+                ['Menentukan tema atau ide', 0, 0, 11, 21],
+                ['Menulis krisis yang lucu dan menyindir', 0, 0, 32, 0],
+                ['Kalimat langsung, perintah, dan kata kerja aksi', 0, 0, 0, 32],
+                ['Ejaan, tanda baca, dan kata baku', 0, 2, 30, 0],
+                ['Percaya diri menulis (awal: kurang percaya diri)', 0, 25, 7, 0],
+                ['Motivasi belajar (awal: kurang termotivasi)', 0, 16, 16, 0]
+            ];
+            const agreePct = (row) => (row[3] + row[4]) / N * 100;
+            const cmpEl = document.getElementById('compareChart');
+            if (cmpEl) {
+                const bar = (label, pct, color) => `<div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                    <span style="width:44px;font-size:10px;color:#64748B">${label}</span>
+                    <div style="flex:1;height:12px;background:#F1F5F9;border-radius:999px;overflow:hidden"><div title="${fmt(pct)}%" style="width:${pct}%;height:100%;background:${color};border-radius:999px"></div></div>
+                    <span style="width:48px;text-align:right;font-size:11px;font-weight:600;color:#334155">${fmt(pct)}%</span></div>`;
+                const lg = `<div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;font-size:11px;color:#475569">
+                    <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#94A3B8"></span>Awal: mengalami kesulitan</span>
+                    <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#005B9E"></span>Akhir: terbantu oleh media</span></div>`;
+                cmpEl.innerHTML = lg + awal.map((a, i) => `<div style="padding:8px 0;border-bottom:1px solid #F1F5F9">
+                    <div style="font-size:11px;font-weight:600;color:#334155">${a[0]}</div>
+                    ${bar('Awal', agreePct(a), '#94A3B8')}${bar('Akhir', agreePct(items[i]), '#005B9E')}</div>`).join('');
+            }
+        };
+    </script>
+</body>
+</html>
